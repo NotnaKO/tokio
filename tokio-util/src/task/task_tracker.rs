@@ -4,6 +4,7 @@
 
 use pin_project_lite::pin_project;
 use std::fmt;
+use std::fmt::{Display, Formatter};
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -195,6 +196,16 @@ pin_project! {
         #[pin]
         future: Notified<'a>,
         inner: Option<&'a TaskTrackerInner>,
+    }
+}
+
+#[derive(Copy, Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct TrackerCloseError;
+
+
+impl Display for TrackerCloseError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        Display::fmt("try to track when tracker already closed", f)
     }
 }
 
